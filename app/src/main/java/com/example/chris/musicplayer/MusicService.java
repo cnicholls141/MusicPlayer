@@ -49,6 +49,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public boolean onUnbind(Intent intent) {
         player.stop();
+
         player.release();
         return false;
     }
@@ -62,6 +63,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         long currSong = playSong.getID();
         //set uri
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currSong);
+        //Uri trackUri = ContentUris.withAppendedId()
 
         try{
             player.setDataSource(getApplicationContext(), trackUri);
@@ -91,6 +93,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public void setSong(int songIndex){
         songPosn = songIndex;
+    }
+
+    public void nextSong() {
+        songPosn++;
+    }
+
+    public void paused() {
+        player.pause();
     }
 
     public void setList(ArrayList<Song> theSongs) {

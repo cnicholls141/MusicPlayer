@@ -33,9 +33,10 @@ public class MainActivity extends AppCompatActivity {
 private ArrayList<Song> songList;
     private ListView songView;
 
-    private MusicService musicSrv;
+    public MusicService musicSrv;
     private Intent playIntent;
     private boolean musicBound=false;
+    private Intent controlIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +142,28 @@ private ArrayList<Song> songList;
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         musicSrv.playSong();
+
+        //controlIntent = new Intent(this, SongControl.class);    // Intent for the control options
+        //startActivity(controlIntent);   // starts the control activity screen
+        setContentView(R.layout.song_control);
+
+    }
+
+
+    public void getNextSong() {
+
+    }
+
+    public boolean canPause() {
+        return true;
+    }
+
+    public void pause(View v) {
+        musicSrv.paused();
+    }
+
+    public void onPausePressed() {
+        musicSrv.paused();
     }
 
     protected void onDestroy() {
