@@ -14,7 +14,9 @@
         android:layout_gravity="right"
         android:layout_weight="0.39"
         android:layout_alignTop="@+id/next_song"
-        android:layout_alignStart="@+id/imageView2" />
+        android:layout_alignStart="@+id/imageView2"
+        android:onClick="getPrevSong"
+        android:nestedScrollingEnabled="false" />
 
     <ImageView
         android:layout_width="224dp"
@@ -47,4 +49,40 @@
         android:layout_below="@+id/imageView2"
         android:layout_toEndOf="@+id/pause_button"
         android:onClick="getNextSong" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=">"
+        android:id="@+id/play_button"
+        android:layout_weight="0.15"
+        android:onClick="play"
+        android:nestedScrollingEnabled="false"
+        android:visibility="visible"
+        android:layout_above="@+id/next_song"
+        android:layout_alignStart="@+id/next_song" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shuffle"
+        android:id="@+id/shuffle_button"
+        android:onClick="shuffleToggle"
+        android:background="@drawable/shuffle_default"
+        android:layout_alignStart="@+id/progressBar"
+        android:layout_alignTop="@+id/progressBar"
+        android:layout_toStartOf="@+id/pause_button" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/pause_button"
+        android:layout_alignStart="@+id/previous_song"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/next_song" />
+
+
 </RelativeLayout>

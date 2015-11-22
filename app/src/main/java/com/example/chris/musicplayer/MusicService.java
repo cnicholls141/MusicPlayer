@@ -8,6 +8,8 @@ import android.os.IBinder;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Random;
+
 import android.content.ContentUris;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -24,14 +26,16 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private ArrayList<Song> songs;
     private int songPosn;
     private final IBinder musicBind = new MusicBinder();
-
+    Random random;
+    private boolean shuffle=false;
+    private Random rand;
 
     public void onCreate(){
         super.onCreate(); // create service
         songPosn=0; // initialize position
         player = new MediaPlayer(); // create player
-
         initMusicPlayer(); //start music player
+        rand=new Random();
     }
 
     public void initMusicPlayer() {
@@ -43,7 +47,16 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.setOnErrorListener(this);
     }
 
+    public void setShuffleState() {
+
+        if (shuffle){
+            shuffle = false;
+        } else {
+            shuffle = true;
+        }
+    }
     public IBinder onBind(Intent arg) {
+
         return musicBind;
     }
 
@@ -63,7 +76,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         long currSong = playSong.getID();
         //set uri
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currSong);
-        //Uri trackUri = ContentUris.withAppendedId()
 
         try{
             player.setDataSource(getApplicationContext(), trackUri);
@@ -73,6 +85,29 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
 
         player.prepareAsync();
+
+    }
+    public void playNext(){
+
+        if(shuffle){    // if shuffle is true
+            int newSong = songPosn;
+            while(newSong==songPosn){
+                newSong=rand.nextInt(songs.size()); // go to a random track within songs.size
+            }
+            songPosn=newSong;
+            playSong();
+        }
+        else{   //else if shuffle is false
+            if (songPosn >= 0 && songPosn <= songs.size() - 1) {    //check to see if the next song is within upper bound
+                songPosn++; // increment it by one
+                playSong(); // play song
+            }
+            if (songPosn == songs.size() - 1) { // if the next song is the last one
+                songPosn = 0;   // set the index to be the first song
+                playSong();
+            }
+        }
+        //playSong();
     }
 
     @Override
@@ -96,16 +131,48 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     public void nextSong() {
+
+        if (songPosn >= 0 && songPosn <= songs.size() - 1) {
         songPosn++;
+        playSong();
+        }
+        if (songPosn == songs.size()-1) {
+            songPosn = 0;
+            playSong();
+        }
+    }
+
+    public void prevSong() {
+        if (songPosn >= 0 && songPosn <= songs.size() - 1) {
+            songPosn--;
+            playSong();
+        }
+        if(songPosn == 0) {
+            songPosn--;
+            songPosn = songs.size() - 1;
+            playSong();
+        }
     }
 
     public void paused() {
         player.pause();
     }
 
+    public void resume() {
+        player.start();
+    }
+
+
     public void setList(ArrayList<Song> theSongs) {
         songs = theSongs; // pass list of songs to the activity
     }
+
+
+    public void shuffleSongs() {
+        if(shuffle) shuffle=false;
+        else shuffle=true;
+    }
+
 
     public class MusicBinder extends Binder {
         MusicService getService(){

@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import com.example.chris.musicplayer.MusicService.MusicBinder;
 
 
@@ -37,17 +40,27 @@ private ArrayList<Song> songList;
     private Intent playIntent;
     private boolean musicBound=false;
     private Intent controlIntent;
+    Button play;
+    Button pause;
+    private boolean isPlaying;
+    private boolean isShuffle;
+    //Button playPause = (Button) findViewById(R.id.playPause);
+    final Button shuffle = new Button(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         songView = (ListView)findViewById(R.id.song_list);
         songList = new ArrayList<Song>();
+        isShuffle = false;
+        isPlaying = false;
 
         getSongList();
 
+       // pause.setVisibility(View.INVISIBLE);
+       // play.setVisibility(View.INVISIBLE);
 
         Collections.sort(songList, new Comparator<Song>(){
             public int compare(Song a, Song b) {
@@ -108,15 +121,10 @@ private ArrayList<Song> songList;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-          //  return true;
-        //}
 
         switch (item.getItemId()) {
             case R.id.action_shuffle:
@@ -142,28 +150,39 @@ private ArrayList<Song> songList;
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         musicSrv.playSong();
-
-        //controlIntent = new Intent(this, SongControl.class);    // Intent for the control options
-        //startActivity(controlIntent);   // starts the control activity screen
         setContentView(R.layout.song_control);
+        play = (Button) findViewById(R.id.play_button);
+        pause = (Button) findViewById(R.id.pause_button);
+        play.setVisibility(View.INVISIBLE);
 
     }
 
+    public void getNextSong(View v) {
 
-    public void getNextSong() {
-
+        musicSrv.playNext();
     }
 
-    public boolean canPause() {
-        return true;
+    public void getPrevSong(View v) {
+        musicSrv.prevSong();
     }
 
     public void pause(View v) {
         musicSrv.paused();
+
+        play.setVisibility(View.VISIBLE);
+        pause.setVisibility(View.INVISIBLE);
     }
 
-    public void onPausePressed() {
-        musicSrv.paused();
+    public void play(View v) {
+        musicSrv.resume();
+
+        pause.setVisibility(View.VISIBLE);
+        play.setVisibility(View.INVISIBLE);
+    }
+
+    public void shuffleToggle(View v) {
+        musicSrv.setShuffleState();
+        shuffle.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_state));
     }
 
     protected void onDestroy() {
@@ -171,4 +190,6 @@ private ArrayList<Song> songList;
         musicSrv=null;
         super.onDestroy();
     }
+
+
 }
