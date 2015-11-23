@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.example.chris.musicplayer.MusicService.MusicBinder;
@@ -39,28 +40,20 @@ private ArrayList<Song> songList;
     public MusicService musicSrv;
     private Intent playIntent;
     private boolean musicBound=false;
-    private Intent controlIntent;
-    Button play;
-    Button pause;
-    private boolean isPlaying;
-    private boolean isShuffle;
-    //Button playPause = (Button) findViewById(R.id.playPause);
-    final Button shuffle = new Button(this);
+    private Intent controllerIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
         songView = (ListView)findViewById(R.id.song_list);
         songList = new ArrayList<Song>();
-        isShuffle = false;
-        isPlaying = false;
+
 
         getSongList();
 
-       // pause.setVisibility(View.INVISIBLE);
-       // play.setVisibility(View.INVISIBLE);
 
         Collections.sort(songList, new Comparator<Song>(){
             public int compare(Song a, Song b) {
@@ -135,7 +128,8 @@ private ArrayList<Song> songList;
                 musicSrv=null;
                 System.exit(0);
                 break;
-        }        return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected void onStart() {
@@ -150,40 +144,12 @@ private ArrayList<Song> songList;
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         musicSrv.playSong();
-        setContentView(R.layout.song_control);
-        play = (Button) findViewById(R.id.play_button);
-        pause = (Button) findViewById(R.id.pause_button);
-        play.setVisibility(View.INVISIBLE);
+
+        controllerIntent = new Intent(this, MusicController.class);
+        startActivity(controllerIntent);
 
     }
 
-    public void getNextSong(View v) {
-
-        musicSrv.playNext();
-    }
-
-    public void getPrevSong(View v) {
-        musicSrv.prevSong();
-    }
-
-    public void pause(View v) {
-        musicSrv.paused();
-
-        play.setVisibility(View.VISIBLE);
-        pause.setVisibility(View.INVISIBLE);
-    }
-
-    public void play(View v) {
-        musicSrv.resume();
-
-        pause.setVisibility(View.VISIBLE);
-        play.setVisibility(View.INVISIBLE);
-    }
-
-    public void shuffleToggle(View v) {
-        musicSrv.setShuffleState();
-        shuffle.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_state));
-    }
 
     protected void onDestroy() {
         stopService(playIntent);

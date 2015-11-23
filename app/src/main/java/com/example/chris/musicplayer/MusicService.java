@@ -22,7 +22,7 @@ import android.util.Log;
  */
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
-    private MediaPlayer player;
+    public MediaPlayer player;
     private ArrayList<Song> songs;
     private int songPosn;
     private final IBinder musicBind = new MusicBinder();
@@ -30,12 +30,15 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private boolean shuffle=false;
     private Random rand;
 
+
+
     public void onCreate(){
         super.onCreate(); // create service
         songPosn=0; // initialize position
         player = new MediaPlayer(); // create player
         initMusicPlayer(); //start music player
         rand=new Random();
+
     }
 
     public void initMusicPlayer() {
@@ -45,6 +48,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
+    }
+
+    public int getDuration() {
+        return player.getDuration();
+    }
+
+    public int getCurrentPosition() {
+        return player.getCurrentPosition();
     }
 
     public void setShuffleState() {
@@ -66,6 +77,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.release();
         return false;
     }
+
+
 
     public void playSong(){
         player.reset();
@@ -143,12 +156,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     public void prevSong() {
-        if (songPosn >= 0 && songPosn <= songs.size() - 1) {
+        if (songPosn > 0 && songPosn <= songs.size() - 1) {
             songPosn--;
             playSong();
         }
         if(songPosn == 0) {
-            songPosn--;
+
             songPosn = songs.size() - 1;
             playSong();
         }

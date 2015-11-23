@@ -60,29 +60,52 @@
         android:onClick="play"
         android:nestedScrollingEnabled="false"
         android:visibility="visible"
-        android:layout_above="@+id/next_song"
-        android:layout_alignStart="@+id/next_song" />
+        android:layout_below="@+id/imageView2"
+        android:layout_toEndOf="@+id/next_song" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shuffle"
         android:id="@+id/shuffle_button"
         android:onClick="shuffleToggle"
         android:background="@drawable/shuffle_default"
-        android:layout_alignStart="@+id/progressBar"
-        android:layout_alignTop="@+id/progressBar"
-        android:layout_toStartOf="@+id/pause_button" />
+        android:layout_above="@+id/previous_song"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="145dp" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_below="@+id/pause_button"
-        android:layout_alignStart="@+id/previous_song"
+        android:layout_alignTop="@+id/play_button"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_below="@+id/previous_song"
         android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/next_song" />
+        android:layout_alignStart="@+id/previous_song"
+        android:layout_alignEnd="@+id/play_button"
+        android:max="100"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/time_mm"
+        android:layout_below="@+id/shuffle_button"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/time_ss"
+        android:layout_below="@+id/time_mm"
+        android:layout_toStartOf="@+id/previous_song" />
 
 
 </RelativeLayout>
