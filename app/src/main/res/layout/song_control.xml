@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     android:background="#424242"
-    >
+    android:id="@+id/layout">
 
     <Button
         android:layout_width="wrap_content"
@@ -14,17 +14,8 @@
         android:layout_gravity="right"
         android:layout_weight="0.39"
         android:layout_alignTop="@+id/next_song"
-        android:layout_alignStart="@+id/imageView2"
         android:onClick="getPrevSong"
         android:nestedScrollingEnabled="false" />
-
-    <ImageView
-        android:layout_width="224dp"
-        android:layout_height="386dp"
-        android:id="@+id/imageView2"
-        android:src="@drawable/music_icon"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -33,7 +24,6 @@
         android:text="||"
         android:id="@+id/pause_button"
         android:layout_weight="0.15"
-        android:layout_below="@+id/imageView2"
         android:layout_toEndOf="@+id/previous_song"
         android:onClick="pause"
         android:nestedScrollingEnabled="false" />
@@ -46,7 +36,6 @@
         android:id="@+id/next_song"
         android:layout_gravity="right"
         android:layout_weight="0.39"
-        android:layout_below="@+id/imageView2"
         android:layout_toEndOf="@+id/pause_button"
         android:onClick="getNextSong" />
 
@@ -60,7 +49,6 @@
         android:onClick="play"
         android:nestedScrollingEnabled="false"
         android:visibility="visible"
-        android:layout_below="@+id/imageView2"
         android:layout_toEndOf="@+id/next_song" />
 
     <Button
@@ -69,9 +57,9 @@
         android:id="@+id/shuffle_button"
         android:onClick="shuffleToggle"
         android:background="@drawable/shuffle_default"
-        android:layout_above="@+id/previous_song"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="145dp" />
+        android:layout_below="@+id/timeSeconds"
+        android:layout_alignStart="@+id/song_artist"
+        android:layout_marginTop="44dp" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
@@ -85,27 +73,68 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/seekBar"
+        android:max="100"
         android:layout_below="@+id/previous_song"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/previous_song"
         android:layout_alignEnd="@+id/play_button"
-        android:max="100"/>
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/time_mm"
-        android:layout_below="@+id/shuffle_button"
-        android:layout_alignParentStart="true" />
+        android:text="Title"
+        android:id="@+id/song_title"
+        android:layout_marginTop="56dp"
+        android:layout_below="@+id/seekBar"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/time_ss"
-        android:layout_below="@+id/time_mm"
+        android:layout_below="@+id/song_title"
         android:layout_toStartOf="@+id/previous_song" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID"
+        android:id="@+id/songID"
+        android:layout_alignTop="@+id/song_title"
+        android:layout_toStartOf="@+id/pause_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Artist"
+        android:id="@+id/song_artist"
+        android:layout_alignTop="@+id/song_title"
+        android:layout_toEndOf="@+id/play_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TimeRemaining"
+        android:id="@+id/songDuration"
+        android:layout_alignBottom="@+id/time_ss"
+        android:layout_toStartOf="@+id/next_song"
+        android:layout_marginBottom="39dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Minutes"
+        android:id="@+id/timeMinutes"
+        android:layout_below="@+id/songDuration"
+        android:layout_alignStart="@+id/songDuration" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seconds"
+        android:id="@+id/timeSeconds"
+        android:layout_below="@+id/timeMinutes"
+        android:layout_alignStart="@+id/timeMinutes" />
 
 
 </RelativeLayout>

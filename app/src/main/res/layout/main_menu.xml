@@ -8,12 +8,11 @@
 
 
     <ImageView
-        android:layout_width="371dp"
-        android:layout_height="330dp"
+        android:layout_width="251dp"
+        android:layout_height="249dp"
         android:id="@+id/imageView"
         android:src="@drawable/music_icon"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.45" />
+        android:layout_gravity="center_horizontal" />
 
     <Button
         android:layout_width="fill_parent"
