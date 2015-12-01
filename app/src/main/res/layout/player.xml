@@ -47,6 +47,7 @@
         <ImageView android:layout_width="248dp"
             android:layout_height="278dp"
             android:src="@drawable/music_icon"></ImageView>
+
     </LinearLayout>
 
     <!-- Player Footer -->
@@ -80,7 +81,7 @@
                 android:layout_width="61dp"
                 android:layout_height="61dp"
                 android:background="@null"
-                android:onClick="getNextSong" />
+                 />
             <!-- Backward Button -->
             <!-- Play Button -->
             <ImageButton
@@ -89,16 +90,17 @@
                 android:layout_width="92dp"
                 android:layout_height="77dp"
                 android:background="@null"
-                android:onClick="play" />
-            <!-- Forward Button -->
-            <!-- Next Button -->
+                 />
+
             <ImageButton
                 android:id="@+id/btnNext"
                 android:src="@drawable/btn_next"
-                android:layout_width="61dp"
-                android:layout_height="61dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@null"
-                android:onClick="getNextSong" />
+                 />
+            <!-- Forward Button -->
+            <!-- Next Button -->
         </LinearLayout>
 
         <ImageButton
@@ -108,7 +110,7 @@
             android:src="@drawable/btn_shuffle"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:onClick="shuffleToggle" />
+             />
     </LinearLayout>
 
     <!-- Progress Bar/Seek bar -->
