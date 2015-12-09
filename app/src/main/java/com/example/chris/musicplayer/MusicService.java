@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,35 +21,51 @@ import android.util.Log;
  */
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
-    public MediaPlayer player;
+    //create a media payer to control songs
+    protected MediaPlayer player;
+
+    // create song list
     private ArrayList<Song> songs;
-    private int songPosn;
+
+    //int to keep track of which song
+    private int songIndex;
+
     private final IBinder musicBind = new MusicBinder();
-    Random random;
+    //Random random;
     private boolean shuffle=false;
+    private boolean onComplete = false;
     private Random rand;
 
 
 
     public void onCreate(){
         super.onCreate(); // create service
-        songPosn=0; // initialize position
+        songIndex =0; // initialize position
         player = new MediaPlayer(); // create player
         initMusicPlayer(); //start music player
         rand=new Random();
 
     }
 
-    public void initMusicPlayer() {
-        player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK); // wake lock lets it play when it becomes idle
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC); // set stream type to audio
+    public int getIndex() {
+        return songIndex;
+    }
 
+    public void initMusicPlayer() {
+
+        // wake lock lets it play when it becomes idle
+        player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+
+        // set stream type to audio
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        //sets listeners to tell the player what to do after its prepared, completed or errored
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
     }
 
-    public int getDuration() {
+   public int getDuration() {
         return player.getDuration();
     }
 
@@ -58,13 +73,23 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         return player.getCurrentPosition();
     }
 
+    public void seek(int posn){
+        player.seekTo(posn);
+    }
+
+    public boolean isPlaying(){
+        return player.isPlaying();
+    }
+
     public void setShuffleState() {
 
-        if (shuffle){
+        shuffle = shuffle ? false: true;
+
+        /*if (shuffle){
             shuffle = false;
         } else {
             shuffle = true;
-        }
+        }*/
     }
     public IBinder onBind(Intent arg) {
 
@@ -79,19 +104,16 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
 
-
     public void playSong(){
         player.reset();
 
-        //get song
-        Song playSong = songs.get(songPosn);
-        //get id
-        long currSong = playSong.getID();
-        //set uri
-        Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currSong);
+        //get the song, id and Uri
+        Song songPlay = songs.get(songIndex);
+        long currentSong = songPlay.getID();
+        Uri trackListUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currentSong);
 
         try{
-            player.setDataSource(getApplicationContext(), trackUri);
+            player.setDataSource(getApplicationContext(), trackListUri);
         }
         catch(Exception e){
             Log.e("MUSIC SERVICE", "Error setting data source", e);
@@ -100,69 +122,79 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.prepareAsync();
 
     }
-    public void playNext(){
 
-        if(shuffle){    // if shuffle is true
-            int newSong = songPosn;
-            while(newSong==songPosn){
-                newSong=rand.nextInt(songs.size()); // go to a random track within songs.size
+    public void playNext() {
+
+        //Log.d("songIndex:", Integer.toString(songIndex));
+        //Log.d("songs.size is", Integer.toString(songs.size()));
+
+        //check to see if shuffle is true
+        if (shuffle) {
+            //Log.d("songIndex iftrue:", Integer.toString(songIndex));
+
+            int songNew = songIndex;
+            while (songNew == songIndex) {
+                songNew = rand.nextInt(songs.size()); // go to a random track within songs.size
             }
-            songPosn=newSong;
-            playSong();
+            songIndex = songNew;
         }
-        else{   //else if shuffle is false
-            if (songPosn >= 0 && songPosn <= songs.size() - 1) {    //check to see if the next song is within upper bound
-                songPosn++; // increment it by one
-                playSong(); // play song
+
+        else{   // if shuffle is not true, methos to receiv next song in the tracklist
+
+            if (songIndex >= 0 && songIndex <= songs.size() - 1) {    //check to see if the next song is within upper bound
+                songIndex++; // increment it by one
+                //Log.d("got:", "toindex <=");
+                //playSong(); // play song
             }
-            if (songPosn == songs.size() - 1) { // if the next song is the last one
-                songPosn = 0;   // set the index to be the first song
-                playSong();
+            if (songIndex == songs.size() ) { // if the next song is the last one
+                //Log.d("got:", "to index==");
+                songIndex = 0;   // set the index to be the first song
+
             }
+            //Log.d("songindex before play:", Integer.toString(songIndex));
+
         }
-        //playSong();
+        playSong();
+
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp) {
+    public void onCompletion(MediaPlayer mPlayer) {
 
+        //method for when song is completed
+        if(player.getCurrentPosition() > 0){
+            mPlayer.reset();
+            playNext();
+        }
     }
 
     @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
+    public boolean onError(MediaPlayer mPlayer, int error, int extra) {
         return false;
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
+    public void onPrepared(MediaPlayer mPlayer) {
         //start playback
-        mp.start();
+        mPlayer.start();
     }
 
     public void setSong(int songIndex){
-        songPosn = songIndex;
-    }
-
-    public void nextSong() {
-
-        if (songPosn >= 0 && songPosn <= songs.size() - 1) {
-        songPosn++;
-        playSong();
-        }
-        if (songPosn == songs.size()-1) {
-            songPosn = 0;
-            playSong();
-        }
+        this.songIndex = songIndex;
     }
 
     public void prevSong() {
-        if (songPosn > 0 && songPosn <= songs.size() - 1) {
-            songPosn--;
+
+        //same as next song but checking for upper bound and lower bound,
+        //setting song to the end song if currently at the start
+        if (songIndex > 0 && songIndex <= songs.size() - 1) {
+            songIndex--;
             playSong();
         }
-        if(songPosn == 0) {
 
-            songPosn = songs.size() - 1;
+        if(songIndex == 0) {
+
+            songIndex = songs.size() - 1;
             playSong();
         }
     }
@@ -178,12 +210,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public void setList(ArrayList<Song> theSongs) {
         songs = theSongs; // pass list of songs to the activity
-    }
-
-
-    public void shuffleSongs() {
-        if(shuffle) shuffle=false;
-        else shuffle=true;
     }
 
 

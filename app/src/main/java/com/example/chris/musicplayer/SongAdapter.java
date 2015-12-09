@@ -9,25 +9,19 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.chris.musicplayer.R;
-import com.example.chris.musicplayer.Song;
-
 
 /**
  * Created by Chris on 13/11/15.
  */
 public class SongAdapter extends BaseAdapter {
 
-    private ArrayList<Song> songs;
-    private LayoutInflater songInf;
+    private ArrayList<Song> songsList;
+
+    private LayoutInflater songInflater;
 
     public SongAdapter(Context c, ArrayList<Song> theSongs) {
-        songs = theSongs;
-        songInf = LayoutInflater.from(c);
-    }
-
-    public int getCount() {
-        return songs.size();
+        songsList = theSongs;
+        songInflater = LayoutInflater.from(c);
     }
 
     public Object getItem(int arg0) {
@@ -38,17 +32,26 @@ public class SongAdapter extends BaseAdapter {
         return 0;
     }
 
+    public int getCount() {
+        return songsList.size();
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
+
         //map to song layout
-        LinearLayout songLay = (LinearLayout)songInf.inflate(R.layout.song, parent, false);
-        //get title and artist views
+        LinearLayout songLay = (LinearLayout) songInflater.inflate(R.layout.song, parent, false);
+
+        //retrieve artist/title views
         TextView songView = (TextView)songLay.findViewById(R.id.song_title);
         TextView artistView = (TextView)songLay.findViewById(R.id.song_artist);
-        // get song using position
-        Song currSong = songs.get(position);
-        // get title and artist strings
-        songView.setText(currSong.getTitle());
-        artistView.setText(currSong.getArtist());
+
+        // get current song
+        Song currentSong = songsList.get(position);
+
+        // get title and artist text as string
+        songView.setText(currentSong.getTitle());
+        artistView.setText(currentSong.getArtist());
+
         //set position as tag
         songLay.setTag(position);
         return songLay;
