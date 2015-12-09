@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
     android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:orientation="vertical"
-    android:background="@drawable/list_selector"
+    android:background="#7f8181"
     android:gravity="center"
     android:padding="5dp"
     tools:context=".MainActivity">

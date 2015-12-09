@@ -2,20 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#424242"
+    android:background="#ffffff"
     android:weightSum="1"
     android:onClick="playSongList">
 
 
+    <!-- background image found at iconshow.me -->
     <ImageView
         android:layout_width="251dp"
         android:layout_height="249dp"
         android:id="@+id/imageView"
-        android:src="@drawable/music_icon"
+        android:src="@drawable/music_background"
         android:layout_gravity="center_horizontal" />
 
     <Button
-        android:layout_width="fill_parent"
+        android:layout_width="450dp"
         android:layout_height="wrap_content"
         android:text="Song List"
         android:id="@+id/song_list_button"
@@ -30,4 +31,5 @@
         android:id="@+id/exit_button"
         android:layout_weight="0.18"
         android:onClick="exitApplication" />
+
 </LinearLayout>
