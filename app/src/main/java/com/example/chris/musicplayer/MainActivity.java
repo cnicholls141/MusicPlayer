@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+       startActivity();
+    }
+
+    public void startActivity() {
         setContentView(R.layout.song_list);
 
         songView = (ListView) findViewById(R.id.song_list);
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         SongAdapter songAdapt = new SongAdapter(this, listOfSongs);
         songView.setAdapter(songAdapt);
     }
+
 
     //method to bind class to service
     private ServiceConnection musicConnection = new ServiceConnection() {
@@ -158,9 +163,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         nextSong = (ImageButton) findViewById(R.id.next_button);
         prevSong = (ImageButton) findViewById(R.id.prev_button);
 
-        //timeMinutes = (TextView) findViewById(R.id.timeMinutes);
-        //timeSeconds = (TextView) findViewById(R.id.timeSeconds);
-
         // ID, title and artist views
         songID = (TextView) findViewById(R.id.songTitle);
 
@@ -178,10 +180,9 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         //seekbar methods
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(this);
-        seekBar.setProgress(0);// To set initial progress, i.e zero in starting of treate();
+        seekBar.setProgress(0);// To set initial progress
         seekBar.setMax(musicServ.getDuration());
 
-        //btnPlaylist = (ImageButton) findViewById(R.id.btnPlaylist);
 
         // on click listeners
         play.setOnClickListener(this);
@@ -259,9 +260,11 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
     @Override
     public void onBackPressed() {
-        // method makes sure music keeps playing when back button is pressed by moving task to back of activity stack
-        moveTaskToBack(true);
 
+        // goes back to the list view when you press back so you can select song
+        startActivity();
+
+        //moveTaskToBack(true);
     }
 
     protected void onDestroy() {
